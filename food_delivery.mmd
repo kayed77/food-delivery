@@ -1,0 +1,104 @@
+classDiagram
+direction TB
+
+class OrderStatus {
+  <<enumeration>>
+  NEW
+  PAID
+  DELIVERED
+  CANCELLED
+}
+
+class MenuItem {
+  <<abstract>>
+  -String name
+  -double basePrice
+  +MenuItem(String name, double basePrice)
+  +getName() String
+  +getBasePrice() double
+  +getFinalPrice()* double
+}
+
+class Meal {
+  -int extraToppings
+  -double TOPPING_PRICE$
+  +Meal(String name, double basePrice, int extraToppings)
+  +getFinalPrice() double
+}
+
+class Drink {
+  -boolean large
+  -double LARGE_FEE$
+  +Drink(String name, double basePrice, boolean large)
+  +isLarge() boolean
+  +getFinalPrice() double
+}
+
+class OrderLine {
+  -int quantity
+  +OrderLine(MenuItem item, int quantity)
+  +getItem() MenuItem
+  +getQuantity() int
+  +getLineTotal() double
+}
+
+class DeliveryOption {
+  <<interface>>
+  +getFee() double
+}
+
+class StandardDelivery {
+  -double FEE$
+  +getFee() double
+}
+
+class ExpressDelivery {
+  -double FEE$
+  +getFee() double
+}
+
+class PaymentMethod {
+  <<interface>>
+  +calculateAmount(double total) double
+}
+
+class CashPayment {
+  +calculateAmount(double total) double
+}
+
+class CardPayment {
+  -double FEE_RATE$
+  +calculateAmount(double total) double
+}
+
+class Order {
+  -int nextOrderNumber$
+  -int orderNumber
+  -String customerName
+  -OrderStatus status
+  +Order(String customerName, DeliveryOption delivery)
+  +addItem(MenuItem item) void
+  +addItem(MenuItem item, int quantity) void
+  +getSubtotal() double
+  +getDeliveryFee() double
+  +getTotal() double
+  +pay(PaymentMethod method) double
+  +deliver() void
+  +cancel() void
+  +getOrderNumber() int
+  +getCustomerName() String
+  +getStatus() OrderStatus
+}
+
+MenuItem <|-- Meal
+MenuItem <|-- Drink
+DeliveryOption <|.. StandardDelivery
+DeliveryOption <|.. ExpressDelivery
+PaymentMethod <|.. CashPayment
+PaymentMethod <|.. CardPayment
+
+Order "1" *-- "1..*" OrderLine : -lines
+OrderLine "*" --> "1" MenuItem : -item
+Order "*" --> "1" DeliveryOption : -delivery
+Order "*" --> "1" OrderStatus : -status
+Order ..> PaymentMethod : uses
