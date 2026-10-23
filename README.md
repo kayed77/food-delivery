@@ -2,8 +2,8 @@
 
 Object-Oriented Design assignment: UML class diagram for a food delivery system.
 
-**Name:** ______________________  
-**ID:** ______________________
+**Name:** Bana Kayed  
+**ID:** 12442176
 
 ## Files
 - `Food_Delivery_UML_Class_Diagram.pdf` - the final diagram (PDF)
